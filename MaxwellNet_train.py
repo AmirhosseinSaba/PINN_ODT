@@ -11,9 +11,7 @@ import tensorflow as tf
 import os
 import sklearn.model_selection
 import matplotlib.pyplot as plt
-
 from tensorflow.keras.optimizers import Adam
-
 from MaxwellNet3D_PhysicalModel import Physical_properties, MaxwellNet_Loss
 from MaxwellNet3D_Architecture import MaxwellNet_Architecture
 from MaxwellNet_trainX import train_unet
@@ -27,8 +25,13 @@ tf.config.run_functions_eagerly(True)
 
 data_path_load      = os.getcwd()
 
-input_data_filename = data_path_load + "/" + "Example1_Refractive_Index_dataset.npy"
+input_data_filename = data_path_load + "/" + "Example2_Refractive_Index_dataset.npy"
 RI                  = np.load(input_data_filename)
+
+# The original model was trained with 1000 samples and the training dataset for RI was 1000x64x64x64. However, here I made an example with
+# smaller dataset of 45x64x64x64 with only 45 samples. In order to properly train the network use a bigger dataset. 15% of the data is used for validation.
+
+RI                  = RI.astype(np.float64)
 
 # Select one of the exmaples which will be plotted during training
 RI_test             = RI[-1,:,:,:].reshape((1,RI.shape[1],RI.shape[2],RI.shape[3],1))
